@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "banedetta_mfb"
+version = "0.1.0"
+description = ".."
+authors = ["Taskov1ch"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiomysql = "^0.2.0"
+cryptography = "^43.0.1"
+asyncio = "^3.4.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
