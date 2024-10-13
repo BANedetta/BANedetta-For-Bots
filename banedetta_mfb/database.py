@@ -32,7 +32,7 @@ class DB:
 						`by` VARCHAR(255),
 						reason TEXT,
 						confirmed BOOL,
-						unbanned BOOL DEFAULT FALSE,
+						unbanned BOOL,
 						vk_post INT,
 						tg_post INT
 					);
@@ -52,7 +52,7 @@ class DB:
 				await cur.execute("SELECT * FROM bans_data ORDER BY id DESC LIMIT 1;")
 				return await cur.fetchone()
 
-	async def get_next_datas(self, id):
+	async def get_next_datas(self, id: int):
 		async with self.get_connection() as conn:
 			async with conn.cursor(DictCursor) as cur:
 				await cur.execute("SELECT * FROM bans_data WHERE id > %s ORDER BY id ASC;", (id,))
@@ -69,3 +69,15 @@ class DB:
 			async with conn.cursor(DictCursor) as cur:
 				await cur.execute(f"SELECT * FROM bans_data WHERE nickname = %s ORDER BY id {sort.upper()} LIMIT 1;", (nickname,))
 				return await cur.fetchone()
+
+	async def deny(self, id: int):
+		async with self.get_connection() as conn:
+			async with conn.cursor(DictCursor) as cur:
+				await cur.execute("UPDATE bans_data SET confirmed = %s, unbanned = %s WHERE id = %s;", (False, True, id,))
+				await conn.commit()
+
+	async def confirm(self, id: int):
+		async with self.get_connection() as conn:
+			async with conn.cursor(DictCursor) as cur:
+				await cur.execute("UPDATE bans_data SET confirmed = %s, unbanned = %s WHERE id = %s;", (True, False, id,))
+				await conn.commit()
