@@ -3,7 +3,6 @@ name = "banedetta_mfb"
 version = "dev"
 description = ".."
 authors = ["Taskov1ch"]
-readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
