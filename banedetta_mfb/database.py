@@ -12,6 +12,8 @@ class DB:
 
 	@asynccontextmanager
 	async def get_connection(self):
+		conn = None
+
 		try:
 			conn = await connect(self.host, self.user, self.password, self.schema, self.port)
 			yield conn
