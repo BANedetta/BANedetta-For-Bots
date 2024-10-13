@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "banedetta_mfb"
-version = "dev"
+version = "1"
 description = ".."
 authors = ["Taskov1ch"]
 
