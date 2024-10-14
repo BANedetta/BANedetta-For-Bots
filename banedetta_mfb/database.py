@@ -72,6 +72,12 @@ class DB:
 				await cur.execute(f"SELECT * FROM bans_data WHERE nickname = %s ORDER BY id {sort.upper()} LIMIT 1;", (nickname,))
 				return await cur.fetchone() or {}
 
+	async def get_data_by_post_id(self, platform: str, post_id: int, sort: str = "DESC"):
+		async with self.get_connection() as conn:
+			async with conn.cursor(DictCursor) as cur:
+				await cur.execute(f"SELECT * FROM bans_data WHERE {platform}_post = %s ORDER BY id {sort.upper()} LIMIT 1;", (post_id,))
+				return await cur.fetchone() or {}
+
 	async def deny(self, id: int):
 		async with self.get_connection() as conn:
 			async with conn.cursor(DictCursor) as cur:
