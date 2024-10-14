@@ -30,7 +30,7 @@ class DB:
 				await cur.execute("""
 					CREATE TABLE IF NOT EXISTS bans_data (
 						id INT AUTO_INCREMENT PRIMARY KEY,
-						nickname VARCHAR(255),
+						banned VARCHAR(255),
 						`by` VARCHAR(255),
 						reason TEXT,
 						confirmed BOOL,
@@ -69,7 +69,7 @@ class DB:
 	async def get_data_by_nickname(self, nickname: str, sort: str = "DESC"):
 		async with self.get_connection() as conn:
 			async with conn.cursor(DictCursor) as cur:
-				await cur.execute(f"SELECT * FROM bans_data WHERE nickname = %s ORDER BY id {sort.upper()} LIMIT 1;", (nickname,))
+				await cur.execute(f"SELECT * FROM bans_data WHERE banned = %s ORDER BY id {sort.upper()} LIMIT 1;", (nickname,))
 				return await cur.fetchone() or {}
 
 	async def get_data_by_post_id(self, platform: str, post_id: int):
