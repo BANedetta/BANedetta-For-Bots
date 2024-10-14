@@ -12,7 +12,7 @@ class Polling:
 		last_id = 0
 
 		if self.__trigger:
-			last_id = (await self.db.get_last_data())["id"]
+			last_id = (await self.db.get_last_data()).get("id") or 0
 			self.__trigger = False
 
 		while True:
