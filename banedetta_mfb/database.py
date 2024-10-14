@@ -46,19 +46,19 @@ class DB:
 		async with self.get_connection() as conn:
 			async with conn.cursor(DictCursor) as cur:
 				await cur.execute("SELECT * FROM bans_data WHERE id = %s", (id,))
-				return await cur.fetchone()
+				return await cur.fetchone() or {}
 
 	async def get_last_data(self):
 		async with self.get_connection() as conn:
 			async with conn.cursor(DictCursor) as cur:
 				await cur.execute("SELECT * FROM bans_data ORDER BY id DESC LIMIT 1;")
-				return await cur.fetchone()
+				return await cur.fetchone() or {}
 
 	async def get_next_datas(self, id: int):
 		async with self.get_connection() as conn:
 			async with conn.cursor(DictCursor) as cur:
 				await cur.execute("SELECT * FROM bans_data WHERE id > %s ORDER BY id ASC;", (id,))
-				return await cur.fetchall()
+				return await cur.fetchall() or {}
 
 	async def update_post_id(self, platform: str, post_id: int, id: int):
 		async with self.get_connection() as conn:
@@ -70,7 +70,7 @@ class DB:
 		async with self.get_connection() as conn:
 			async with conn.cursor(DictCursor) as cur:
 				await cur.execute(f"SELECT * FROM bans_data WHERE nickname = %s ORDER BY id {sort.upper()} LIMIT 1;", (nickname,))
-				return await cur.fetchone()
+				return await cur.fetchone() or {}
 
 	async def deny(self, id: int):
 		async with self.get_connection() as conn:
