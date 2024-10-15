@@ -82,8 +82,8 @@ class DB:
 		await self.execute_query("UPDATE bans_data SET unbanned = %s, status = %s WHERE id = %s;", (False, "confirmed", id))
 
 	async def get_uncorrected_bans(self, platform: str) -> list:
-		resolveds = await self.fetch_all(f"SELECT * FROM bans_data WHERE status != %s AND {platform}_post > -1;", ("waiting",))
-		no_posts = await self.fetch_all(f"SELECT * FROM bans_data WHERE status = %s AND {platform}_post IS NULL;", ("waiting",))
+		resolveds = await self.fetch_all(f"SELECT * FROM bans_data WHERE status != %s AND {platform}_post > -1 AND confirmed != %s;", ("waiting", True,))
+		no_posts = await self.fetch_all(f"SELECT * FROM bans_data WHERE status = %s AND {platform}_post IS NULL AND confirmed != %s;", ("waiting", True,))
 		return resolveds + no_posts
 
 	# async def is_resolved_ban(self, platform: str, post_id: int) -> bool:
