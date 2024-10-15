@@ -9,9 +9,9 @@ class DataSynchronizer:
 
 	async def synchronization(self):
 		while True:
-			datas = await self.db.get_resolved_bans(self.platform)
+			datas = await self.db.get_uncorrected_bans(self.platform)
 
 			for data in datas:
 				yield data
 
-			await sleep(5)
+			await sleep(3)
