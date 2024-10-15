@@ -36,7 +36,8 @@ class DB:
 						confirmed BOOL,
 						unbanned BOOL,
 						vk_post INT,
-						tg_post INT
+						tg_post INT,
+						created DATETIME DEFAULT CURRENT_TIME
 					);
 				""")
 				await cur.execute("SET sql_notes = 1;")
