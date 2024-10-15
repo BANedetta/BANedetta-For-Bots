@@ -1,14 +1,13 @@
 from .database import DB
 from asyncio import sleep
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 @dataclass
 class Polling:
 	db: DB
 	__trigger: bool = True
 
-	async def polling(self):
+	async def new_data(self):
 		last_id = 0
 
 		if self.__trigger:
