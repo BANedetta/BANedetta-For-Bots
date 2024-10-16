@@ -9,7 +9,7 @@ class DataSynchronizer:
 
 	async def synchronize_problems(self):
 		while True:
-			async for data, problem in (
+			for data, problem in (
 				(await self.db.get_no_posts_bans(self.platform), "no_post"),
 				(await self.db.get_resolved_bans(self.platform), "resolved"),
 			):
