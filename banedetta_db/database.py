@@ -38,6 +38,7 @@ class DB:
 				unbanned BOOL,
 				vk_post INT,
 				tg_post INT,
+				tg_post_c INT,
 				created DATETIME DEFAULT CURRENT_TIMESTAMP
 			);
 		""")
@@ -86,3 +87,6 @@ class DB:
 
 	async def get_resolved_bans(self, platform: str) -> list:
 		return await self.fetch_all(f"SELECT * FROM bans_data WHERE confirmed IS NOT TRUE AND status != %s AND {platform}_post > -1;", ("waiting",))
+
+	async def update_c_post_id(self, post_id: int, id: int) -> None:
+		await self.execute_query(f"UPDATE bans_data SET tg_post_c = %s WHERE id = %s;", (post_id, id))
