@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "banedetta_db"
-version = "1.59"
+version = "1.60"
 description = "A special module for working with databases on the bot's side."
 authors = ["Taskov1ch"]
 
