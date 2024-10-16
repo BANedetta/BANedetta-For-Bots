@@ -17,4 +17,4 @@ class DataSynchronizer:
 					d["problem"] = problem
 					yield d
 
-			await sleep(3)
+			await sleep(10)
