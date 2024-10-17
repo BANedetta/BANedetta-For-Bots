@@ -26,7 +26,7 @@ class DB:
 			await conn.commit()
 
 	async def init(self):
-		# await self.execute_query("SET sql_notes = 0;")
+		await self.execute_query("SET sql_notes = 0;")
 		await self.execute_query("""
 			CREATE TABLE IF NOT EXISTS bans_data (
 				id INT AUTO_INCREMENT PRIMARY KEY,
@@ -35,14 +35,14 @@ class DB:
 				reason TEXT,
 				confirmed BOOL,
 				status VARCHAR(9) DEFAULT "waiting",
-				unbanned BOOL,
+				unbanned BOOL DEFAULT FALSE,
 				vk_post INT,
 				tg_post INT,
 				tg_post_c INT,
 				created DATETIME DEFAULT CURRENT_TIMESTAMP
 			);
 		""")
-		# await self.execute_query("SET sql_notes = 1;")
+		await self.execute_query("SET sql_notes = 1;")
 
 	async def execute_query(self, query: str, params: tuple = ()):
 		async with self.get_cursor() as cur:
@@ -70,8 +70,8 @@ class DB:
 	async def update_post_id(self, platform: str, post_id: int, id: int):
 		await self.execute_query(f"UPDATE bans_data SET {platform}_post = %s WHERE id = %s;", (post_id, id))
 
-	async def get_datas_by_nickname(self, nickname: str, sort: str = "DESC") -> dict:
-		return await self.fetch_one(f"SELECT * FROM bans_data WHERE banned = %s ORDER BY id {sort.upper()} LIMIT 1;", (nickname,))
+	async def get_data_by_nickname(self, nickname: str) -> dict:
+		return await self.fetch_one("SELECT * FROM bans_data WHERE banned = %s ORDER BY id DESC LIMIT 1;", (nickname,))
 
 	async def get_data_by_post_id(self, platform: str, post_id: int) -> dict:
 		return await self.fetch_one(f"SELECT * FROM bans_data WHERE {platform}_post = %s LIMIT 1;", (post_id,))
@@ -80,7 +80,7 @@ class DB:
 		await self.execute_query("UPDATE bans_data SET unbanned = %s, status = %s WHERE id = %s;", (True, "denied", id))
 
 	async def confirm(self, id: int):
-		await self.execute_query("UPDATE bans_data SET unbanned = %s, status = %s WHERE id = %s;", (False, "confirmed", id))
+		await self.execute_query("UPDATE bans_data SET status = %s WHERE id = %s;", ("confirmed", id))
 
 	async def get_no_post_bans(self, platform: str) -> list:
 		return await self.fetch_all(f"SELECT * FROM bans_data WHERE confirmed IS NOT TRUE AND status = %s AND {platform}_post IS NULL;", ("waiting",))
