@@ -82,7 +82,7 @@ class DB:
 	async def confirm(self, id: int):
 		await self.execute_query("UPDATE bans_data SET unbanned = %s, status = %s WHERE id = %s;", (False, "confirmed", id))
 
-	async def get_no_posts_bans(self, platform: str) -> list:
+	async def get_no_post_bans(self, platform: str) -> list:
 		return await self.fetch_all(f"SELECT * FROM bans_data WHERE confirmed IS NOT TRUE AND status = %s AND {platform}_post IS NULL;", ("waiting",))
 
 	async def get_resolved_bans(self, platform: str) -> list:
