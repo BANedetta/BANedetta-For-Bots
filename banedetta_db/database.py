@@ -25,7 +25,7 @@ class DB:
 				yield cur
 			await conn.commit()
 
-	async def init(self) -> None:
+	async def init(self):
 		# await self.execute_query("SET sql_notes = 0;")
 		await self.execute_query("""
 			CREATE TABLE IF NOT EXISTS bans_data (
@@ -44,7 +44,7 @@ class DB:
 		""")
 		# await self.execute_query("SET sql_notes = 1;")
 
-	async def execute_query(self, query: str, params: tuple = ()) -> None:
+	async def execute_query(self, query: str, params: tuple = ()):
 		async with self.get_cursor() as cur:
 			await cur.execute(query, params)
 
@@ -67,7 +67,7 @@ class DB:
 	async def get_next_datas(self, id: int) -> list:
 		return await self.fetch_all("SELECT * FROM bans_data WHERE id > %s ORDER BY id ASC;", (id,))
 
-	async def update_post_id(self, platform: str, post_id: int, id: int) -> None:
+	async def update_post_id(self, platform: str, post_id: int, id: int):
 		await self.execute_query(f"UPDATE bans_data SET {platform}_post = %s WHERE id = %s;", (post_id, id))
 
 	async def get_datas_by_nickname(self, nickname: str, sort: str = "DESC") -> dict:
@@ -76,10 +76,10 @@ class DB:
 	async def get_data_by_post_id(self, platform: str, post_id: int) -> dict:
 		return await self.fetch_one(f"SELECT * FROM bans_data WHERE {platform}_post = %s LIMIT 1;", (post_id,))
 
-	async def deny(self, id: int) -> None:
+	async def deny(self, id: int):
 		await self.execute_query("UPDATE bans_data SET unbanned = %s, status = %s WHERE id = %s;", (True, "deny", id))
 
-	async def confirm(self, id: int) -> None:
+	async def confirm(self, id: int):
 		await self.execute_query("UPDATE bans_data SET unbanned = %s, status = %s WHERE id = %s;", (False, "confirmed", id))
 
 	async def get_no_posts_bans(self, platform: str) -> list:
@@ -88,5 +88,5 @@ class DB:
 	async def get_resolved_bans(self, platform: str) -> list:
 		return await self.fetch_all(f"SELECT * FROM bans_data WHERE confirmed IS NOT TRUE AND status != %s AND {platform}_post > -1;", ("waiting",))
 
-	async def update_c_post_id(self, post_id: int, id: int) -> None:
+	async def update_c_post_id(self, post_id: int, id: int):
 		await self.execute_query(f"UPDATE bans_data SET tg_post_c = %s WHERE id = %s;", (post_id, id))
