@@ -77,7 +77,7 @@ class DB:
 		return await self.fetch_one(f"SELECT * FROM bans_data WHERE {platform}_post = %s LIMIT 1;", (post_id,))
 
 	async def deny(self, id: int):
-		await self.execute_query("UPDATE bans_data SET unbanned = %s, status = %s WHERE id = %s;", (True, "deny", id))
+		await self.execute_query("UPDATE bans_data SET unbanned = %s, status = %s WHERE id = %s;", (True, "denied", id))
 
 	async def confirm(self, id: int):
 		await self.execute_query("UPDATE bans_data SET unbanned = %s, status = %s WHERE id = %s;", (False, "confirmed", id))
