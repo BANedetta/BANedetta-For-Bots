@@ -39,6 +39,7 @@ class DB:
 				vk_post INT,
 				tg_post INT,
 				tg_post_c INT,
+				`trigger` BOOL,
 				created DATETIME DEFAULT CURRENT_TIMESTAMP
 			);
 		""")
